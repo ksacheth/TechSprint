@@ -7,6 +7,10 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 const app = express();
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Hello There");
+});
+
 app.post("/updateRiskLevel", async (req, res) => {
   const { riskLevel, tideData, weatherSummary } = req.body;
 
@@ -56,10 +60,10 @@ async function alertGroup(data) {
 
   // contruct the message to send
   const text = `
-              ⚠️ <b>Incident Reported</b> ⚠️
-              📍 <b>Lat:</b> ${data.coordinates.latitude}
-              📍 <b>Long:</b> ${data.coordinates.longitude}
-              📷 <b>Image:</b> ${data.imageUrl}`;
+⚠️ <b>Incident Reported</b> ⚠️
+📍 <b>Lat:</b> ${data.coordinates.latitude}
+📍 <b>Long:</b> ${data.coordinates.longitude}
+📷 <b>Image:</b> ${data.imageUrl}`;
   try {
     await axios.post(url, {
       chat_id: chatId,
