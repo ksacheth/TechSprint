@@ -38,6 +38,11 @@ def run_job():
             "wavePeriod": prediction_data.get('wave_period'),
             "currentVelocity": prediction_data.get('ocean_current_velocity')
         },
+        "risk_factors": prediction_data['risk_factors'],
+        "location" : {
+            "latitude": prediction_data.get('latitude'),
+            "longitude": prediction_data.get('longitude')
+        },
         "weatherSummary": ", ".join(prediction_data.get('risk_factors', [])) or "Normal conditions"
     }
 
@@ -52,4 +57,4 @@ def run_job():
 if __name__ == "__main__":
     while True:
         run_job()
-        time.sleep(3600)
+        time.sleep(360)

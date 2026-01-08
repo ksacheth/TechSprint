@@ -1,34 +1,55 @@
-const express = require("express");
+import express from "express";
 import axios from "axios";
+import "dotenv/config";
 import { db } from "./firebaseConfig.js";
-const admin = require("firebase-admin");
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import admin from "firebase-admin";
+import cors from "cors";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  getDocs,
+  orderBy,
+} from "firebase/firestore";
+
+// Disable SSL verification for development
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello There");
 });
 
-app.post("/updateRiskLevel", async (req, res) => {
-  const { riskLevel, tideData, weatherSummary } = req.body;
+app.post("/api/updateRiskLevel", async (req, res) => {
+  const { riskLevel, tideData, weatherSummary, location, risk_factors } =
+    req.body;
 
   try {
     // add the entry to database
     await addDoc(collection(db, "risk_logs"), {
       riskLevel,
+      location,
       tideData,
+      risk_factors,
       weatherSummary,
       timestamp: serverTimestamp(),
     });
+    console.log("Data Saved");
     res.status(200).send("Data saved");
   } catch (err) {
     res.status(500).send(err.message);
   }
 });
 
-app.post("/reportIncident", async (req, res) => {
+app.post("/api/reportIncident", async (req, res) => {
   const { coordinates, confidence, imageUrl } = req.body;
 
   try {
@@ -37,6 +58,7 @@ app.post("/reportIncident", async (req, res) => {
       coordinates,
       confidence,
       imageUrl,
+      timestamp: serverTimestamp(),
     });
     console.log("Saved to database");
 
@@ -52,13 +74,52 @@ app.post("/reportIncident", async (req, res) => {
   }
 });
 
+app.get("/api/getAlerts", async (req, res) => {
+  try {
+    // 1. get the data from database
+    const alertsRef = collection(db, "incidents");
+    const q = query(alertsRef, orderBy("timestamp", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    // 2. send the data
+    const alerts = [];
+    querySnapshot.forEach((doc) => {
+      alerts.push({ id: doc.id, ...doc.data() });
+    });
+    res.json(alerts);
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+app.get("/api/getWeather", async (req, res) => {
+  try {
+    // 1. get the data from database
+    const weatherRef = collection(db, "risk_logs");
+    const q = query(weatherRef, orderBy("timestamp", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    // 2. send the data
+    if (querySnapshot.empty) {
+      return res.json([]);
+    }
+    const doc = querySnapshot.docs[0];
+    res.json({ id: doc.id, ...doc.data() });
+
+  } catch (err) {
+    console.error("Error fetching weather:", err.message);
+    res.status(500).send(err.message);
+  }
+});
+
 // Function to send Telegram Alert
 async function alertGroup(data) {
   const botToken = process.env.BOT_TOKEN;
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   const chatId = "-5057552051";
 
-  // contruct the message to send
+  // contructing the message to send
   const text = `
 ⚠️ <b>Incident Reported</b> ⚠️
 📍 <b>Lat:</b> ${data.coordinates.latitude}
@@ -79,4 +140,4 @@ async function alertGroup(data) {
   }
 }
 
-app.listen(3000);
+app.listen(3001);
