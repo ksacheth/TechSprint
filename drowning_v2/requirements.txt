@@ -1,0 +1,11 @@
+# Core AI and Vision
+ultralytics
+opencv-python
+numpy
+mediapipe==0.10.9
+
+# Networking
+requests
+
+# Optional: Useful for debugging
+pillow
