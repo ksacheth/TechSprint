@@ -6,8 +6,6 @@ services:
     container_name: restapi
     ports:
       - "8000:8000"
-    env_file:
-      - ./.env
 
   backend:
     build:

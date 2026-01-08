@@ -45,7 +45,7 @@ Create `.env` files per service.
 
 Backend (`backend/.env`)
 ```
-API_KEY=your_firebase_api_key
+FIREBASE_API_KEY=your_firebase_api_key
 BOT_TOKEN=telegram_bot_token
 ```
 

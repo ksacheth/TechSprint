@@ -3,7 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import "dotenv/config";
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "smart-beach-safety-system.firebaseapp.com",
   projectId: "smart-beach-safety-system",
   storageBucket: "smart-beach-safety-system.firebasestorage.app",
