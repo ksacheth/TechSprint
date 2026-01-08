@@ -41,25 +41,26 @@ python cron_job.py  # polls every ~6 minutes by default
 ```
 
 ## Environment Variables
-Create `.env` files per service.
-
-Backend (`backend/.env`)
+- Root `.env` (used by docker compose):
 ```
-FIREBASE_API_KEY=your_firebase_api_key
+API_KEY=your_firebase_api_key_or_service_account_api_key
 BOT_TOKEN=telegram_bot_token
-```
-
-Frontend (`frontend/.env.local`)
-```
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
 NEXT_PUBLIC_MAPS_API=your_google_maps_key
-```
-
-Cron script (`python_script/.env`)
-```
 PREDICT_URL=http://localhost:8000/api/v1/predict
 UPDATE_URL=http://localhost:3001/api/updateRiskLevel
 ```
+- Local dev (optional): you can still keep service-level `.env` files if running components manually; they mirror the same keys.
+
+## Docker Compose
+```bash
+docker compose up --build
+```
+Services:
+- restapi: http://localhost:8000
+- backend: http://localhost:3001
+- frontend: http://localhost:3000
+- cron: polls predictor and posts to backend (uses root `.env`)
 
 ## Key Endpoints
 - FastAPI: `POST /api/v1/predict` (lat/long → safety classification), `GET /api/v1/predict/{lat}/{long}`
