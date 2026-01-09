@@ -40,11 +40,11 @@ const StatusBar = () => {
 
           setWeather({
             riskLevel: data.riskLevel || "NA",
-            tideHeight: data.tideData.waveHeight
+             tideHeight: data.tideData.waveHeight !== undefined && data.tideData.waveHeight !== null
               ? `${data.tideData.waveHeight}ft`
               : "N/A",
             tideDirection: data.tideData.direction || "N/A",
-            windSpeed: data.tideData.currentVelocity
+            windSpeed: data.tideData.currentVelocity !== undefined && data.tideData.currentVelocity !== null
               ? `${data.tideData.currentVelocity}kn`
               : "N/A",
             windDirection: data.weatherSummary.windDirection || "N/A",
