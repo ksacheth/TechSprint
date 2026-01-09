@@ -27,7 +27,7 @@ export default function Home() {
           </section>
 
           {/* Right Panel: Incident Feeds */}
-          <section className="lg:col-span-3 flex flex-col gap-4 h-full">
+          <section className="lg:col-span-3 flex flex-col gap-4 h-full overflow-y-auto">
             <IncidentView />
           </section>
         </div>

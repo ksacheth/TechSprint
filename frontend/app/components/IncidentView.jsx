@@ -7,9 +7,11 @@ const IncidentView = () => {
   const [isOthersOpen, setIsOthersOpen] = useState(false);
   const { alerts, loading } = useAlerts();
 
-  // Get the latest critical alert
-  const latestIncident =
-    alerts?.find((a) => a.level === "CRITICAL" && a.frame) || alerts?.[0];
+  // Get all critical incidents with frames
+  const criticalIncidents =
+    alerts?.filter((a) => a.level === "CRITICAL" && a.frame) || [];
+  const latestIncident = criticalIncidents[0];
+  const otherIncidents = criticalIncidents.slice(1);
 
   return (
     <>
@@ -67,6 +69,48 @@ const IncidentView = () => {
           </p>
         </div>
       </div>
+
+      {/* Other Critical Incidents */}
+      {otherIncidents.length > 0 && (
+        <div className="bg-panel-light rounded-xl border border-border-light overflow-hidden flex-1 flex flex-col shadow-sm">
+          <div className="p-3 border-b border-border-light bg-slate-50 flex justify-between items-center">
+            <h3 className="text-sm font-bold text-text-dark">
+              Other Critical Incidents ({otherIncidents.length})
+            </h3>
+          </div>
+          <div className="overflow-y-auto p-2 space-y-2 flex-1">
+            {otherIncidents.map((incident) => (
+              <div
+                key={incident.id}
+                className="bg-white rounded-lg border border-danger/20 overflow-hidden hover:shadow-md transition-shadow"
+              >
+                <div className="aspect-video relative bg-slate-100">
+                  <img
+                    className="w-full h-full object-cover"
+                    alt={`Incident at ${incident.time}`}
+                    src={`data:image/jpeg;base64,${incident.frame}`}
+                  />
+                  <div className="absolute top-2 right-2">
+                    <span className="text-[9px] font-bold text-white bg-danger px-2 py-0.5 rounded">
+                      {incident.confidence}%
+                    </span>
+                  </div>
+                  <div className="absolute bottom-2 left-2">
+                    <span className="text-[9px] font-mono text-white bg-black/60 px-2 py-0.5 rounded">
+                      {incident.time}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-2 bg-danger/5">
+                  <p className="text-xs text-slate-700">
+                    <span className="font-bold">{incident.type}</span> detected
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
