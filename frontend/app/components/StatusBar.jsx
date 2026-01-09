@@ -11,7 +11,6 @@ const StatusBar = () => {
     tideDirection: "NA",
     windSpeed: "NA",
     windDirection: "NA",
-    uvIndex: "NA",
   });
 
   useEffect(() => {
@@ -49,7 +48,6 @@ const StatusBar = () => {
               ? `${data.tideData.currentVelocity}kn`
               : "N/A",
             windDirection: data.weatherSummary.windDirection || "N/A",
-            uvIndex: data.weatherSummary.uvIndex || "N/A",
           });
         }
       } catch (error) {
@@ -106,19 +104,6 @@ const StatusBar = () => {
             <span className="text-slate-500 ml-1 text-sm">
               {weather.windDirection}
             </span>
-          </span>
-        </div>
-      </div>
-      <div className="flex items-center gap-3 px-6 py-2 min-w-max rounded-2xl">
-        <span className="material-symbols-outlined text-primary text-2xl">
-          wb_sunny
-        </span>
-        <div>
-          <span className="text-[11px] uppercase text-slate-500 font-semibold block">
-            UV Index
-          </span>
-          <span className="font-mono text-lg font-medium text-text-dark">
-            {weather.uvIndex}
           </span>
         </div>
       </div>
