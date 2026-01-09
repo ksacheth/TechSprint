@@ -1,6 +1,6 @@
 import express from "express";
 import axios from "axios";
-import "dotenv/config";
+import dotenv from "dotenv";
 import { db } from "./firebaseConfig.js";
 import admin from "firebase-admin";
 import cors from "cors";
@@ -11,7 +11,7 @@ import {
   query,
   getDocs,
   orderBy,
-  limit
+  limit,
 } from "firebase/firestore";
 
 // Disable SSL verification for development
@@ -68,11 +68,11 @@ app.post("/api/reportIncident", async (req, res) => {
     });
     console.log("Saved to database");
 
-    // // 2. Send Alert
-    // const messageData = { imageUrl };
-    // await alertGroup(messageData);
+    // 2. Send Alert
+    const messageData = { imageBase64: frame, type, confidence };
+    await alertGroup(messageData);
   } catch (err) {
-    console.error("Critical Error:", err);
+    console.error("Error while sending:", err);
   }
 });
 
@@ -116,21 +116,39 @@ app.get("/api/getWeather", async (req, res) => {
 // Function to send Telegram Alert
 async function alertGroup(data) {
   const botToken = process.env.BOT_TOKEN;
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   const chatId = "-5057552051";
 
-  // contructing the message to send
-  const text = `
-⚠️ <b>Incident Reported</b> ⚠️
-📍 <b>Lat:</b> ${data.coordinates.latitude}
-📍 <b>Long:</b> ${data.coordinates.longitude}
-📷 <b>Image:</b> ${data.imageUrl}`;
+  if (!botToken) {
+    console.error("BOT_TOKEN is not set in environment variables");
+    return;
+  }
+
+  console.log("Bot token loaded:", botToken.substring(0, 10) + "...");
+
   try {
-    await axios.post(url, {
-      chat_id: chatId,
-      text: text,
-      parse_mode: "HTML",
+    const photoUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+    console.log("Sending to:", photoUrl);
+
+    const base64Data = data.imageBase64.replace(/^data:image\/\w+;base64,/, "");
+    const imageBuffer = Buffer.from(base64Data, "base64");
+
+    const FormData = (await import("form-data")).default;
+    const formData = new FormData();
+    formData.append("chat_id", chatId);
+    formData.append("photo", imageBuffer, { filename: "incident.jpg" });
+    formData.append(
+      "caption",
+      `⚠️ <b>${
+        data.type || "Incident"
+      } Detected</b> ⚠️\n🎯 <b>Confidence:</b> ${data.confidence || "N/A"}%`,
+      { contentType: "text/plain" }
+    );
+    formData.append("parse_mode", "HTML");
+
+    await axios.post(photoUrl, formData, {
+      headers: formData.getHeaders(),
     });
+
     console.log("Alert sent to Telegram successfully");
   } catch (error) {
     console.error(
