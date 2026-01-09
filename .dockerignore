@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+coverage
+*.tgz
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+env/
+venv/
+ENV/
+virtualenv/
+.venv/
+
+# Editor/OS
+.DS_Store
+.vscode/
+.idea/
+
+# Misc project files
+CLAUDE.md
+
+# Drowning detection
+drowning_v2/videos/*.mp4
+drowning_v2/videos/*.avi
+drowning_v2/videos/*.webm
+drowning_v2/__pycache__/
+drowning_detection/
+README.md

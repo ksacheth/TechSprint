@@ -1,0 +1,13 @@
+# Core AI and Vision
+ultralytics
+opencv-python
+numpy
+mediapipe>=0.10.21
+protobuf>=4.25.8,<5
+
+# Networking
+requests
+python-dotenv
+
+# Optional: Useful for debugging
+pillow
