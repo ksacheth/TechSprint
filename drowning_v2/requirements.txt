@@ -6,6 +6,7 @@ mediapipe==0.10.9
 
 # Networking
 requests
+python-dotenv
 
 # Optional: Useful for debugging
 pillow

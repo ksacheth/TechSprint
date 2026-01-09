@@ -57,6 +57,8 @@ services:
       context: .
       dockerfile: drowning_v2/Dockerfile
     container_name: drowning-detection
+    environment:
+      BACKEND_URL: http://backend:3001
     depends_on:
       - backend
     restart: unless-stopped
