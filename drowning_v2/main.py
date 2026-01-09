@@ -94,9 +94,11 @@ def main():
                         )
 
                         if not alerted:
+                            # Normalize confidence to 0-1 range (stillness > 15 = drowning)
+                            confidence = min(still_counter / 20.0, 1.0)
                             send_alert(
                                 frame=frame,
-                                score=still_counter,
+                                score=confidence,
                                 video_name=video_name
                             )
                             alerted = True

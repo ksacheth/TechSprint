@@ -27,9 +27,9 @@ export default function useAlerts() {
 
           const confidence = alert.confidence || 0;
           const level =
-            confidence > 0.9
+            confidence > 0.7
               ? "CRITICAL"
-              : confidence > 0.7
+              : confidence > 0.6
               ? "ACTIVE"
               : "ENV WARNING";
 

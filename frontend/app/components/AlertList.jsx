@@ -100,7 +100,8 @@ function AlertList() {
                   {alert.title}
                 </h3>
                 <p className={`text-sm mb-3 ${ alert.level === "RESOLVED" ? "text-slate-500" : "text-slate-600" }`}>
-                  {/* {`Lat: ${alert.location.Lat} Long: ${alert.location.Long} . Confidence: ${alert.confidence}%`} */}
+                  {/* {`Lat: ${alert.location.Lat} Long: ${alert.location.Long}`} */}
+                  {`. Confidence: ${alert.confidence}%`}
                 </p>
               </div>
             );
