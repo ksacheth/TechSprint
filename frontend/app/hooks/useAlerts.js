@@ -38,11 +38,13 @@ export default function useAlerts() {
             time,
             level,
             title: "Incident Detected",
-            location: {
-              Lat: alert.coordinates?.latitude ?? null,
-              Long: alert.coordinates?.longitude ?? null,
-            },
+            // location: {
+            //   Lat: alert.coordinates?.latitude ?? null,
+            //   Long: alert.coordinates?.longitude ?? null,
+            // },
             confidence: (confidence * 100).toFixed(0),
+            frame: alert.frame || null,
+            type: alert.type || "DROWNING",
           };
         });
 

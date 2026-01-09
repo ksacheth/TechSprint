@@ -2,9 +2,15 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import useAlerts from "../hooks/useAlerts";
 
 const IncidentView = () => {
   const [isOthersOpen, setIsOthersOpen] = useState(false);
+  const { alerts, loading } = useAlerts();
+
+  // Get the latest critical alert
+  const latestIncident =
+    alerts?.find((a) => a.level === "CRITICAL" && a.frame) || alerts?.[0];
 
   return (
     <>
@@ -19,31 +25,46 @@ const IncidentView = () => {
           </span>
         </div>
         <div className="aspect-video relative bg-slate-100 group">
-          <Image
-            className="w-full h-full object-cover opacity-80"
-            alt="Ocean waves with a swimmer in distress struggling against the current"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQAWn-Q8bBMFwkOuF8JpK07amvbxxqtLB5T0jcDQYAk0mArlJnC4c4AdEonbOtR8Lt5FSrOnVWE2w03ZWGW-gTAIE2_uGATMfjVgonHW8Q4GC-ZrIojRVzOQAlyQrhuFk9VttWRfVEQ83nYO8hSJOOBjQTOXAd1WONc-E7QVEIBjnIa6yOvjiCPGox02Rn4lRse2PLyV85j0o6ygcU0Rg2XEYYqCrvl4OHmtSq-czvdjb9bQL5mukJbA0maj1cwfeSzBAQa8pTqZkw"
-            style={{ filter: "brightness(0.9)" }}
-            fill
-          />
-          <div className="absolute top-[35%] left-[45%] w-[15%] h-[25%] border-2 border-danger shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-distress flex items-start justify-center">
-            <div className="bg-danger text-white text-[10px] font-bold px-1.5 py-0.5 -mt-4 uppercase tracking-tighter rounded">
-              Distress 98%
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-slate-500">Loading feed...</p>
             </div>
-          </div>
-          <div className="absolute bottom-3 left-3 right-3 flex justify-between">
-            <span className="text-[10px] font-mono text-danger font-bold bg-white/80 backdrop-blur-sm px-2 py-1 rounded-md shadow-sm">
-              AI: DETECTED
-            </span>
-            <span className="text-[10px] font-mono text-slate-600 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-md shadow-sm">
-              FPS: 30
-            </span>
-          </div>
+          ) : latestIncident?.frame ? (
+            <>
+              <img
+                className="w-full h-full object-cover opacity-80"
+                alt="Live incident detection feed"
+                src={`data:image/jpeg;base64,${latestIncident.frame}`}
+                style={{ filter: "brightness(0.9)" }}
+              />
+              <div className="absolute top-[35%] left-[45%] w-[15%] h-[25%] border-2 border-danger shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-distress flex items-start justify-center">
+                <div className="bg-danger text-white text-[10px] font-bold px-1.5 py-0.5 -mt-4 uppercase tracking-tighter rounded">
+                  {latestIncident.type} {latestIncident.confidence}%
+                </div>
+              </div>
+              <div className="absolute bottom-3 left-3 right-3 flex justify-between">
+                <span className="text-[10px] font-mono text-danger font-bold bg-white/80 backdrop-blur-sm px-2 py-1 rounded-md shadow-sm">
+                  AI: DETECTED
+                </span>
+                <span className="text-[10px] font-mono text-slate-600 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-md shadow-sm">
+                  {latestIncident.time}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-slate-500">No active incidents</p>
+            </div>
+          )}
         </div>
         <div className="p-4 bg-slate-50 border-t border-border-light text-slate-700 text-sm">
           <p>
-            <span className="font-bold text-text-dark">Tower 4:</span> Swimmer
-            in distress, high probability. Dispatch team immediately.
+            <span className="font-bold text-text-dark">
+              {latestIncident?.type || "No Incident"}:
+            </span>{" "}
+            {latestIncident
+              ? `Detected at ${latestIncident.time} with ${latestIncident.confidence}% confidence. Dispatch team immediately.`
+              : "Monitoring active."}
           </p>
         </div>
       </div>
