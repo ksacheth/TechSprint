@@ -11,6 +11,7 @@ import {
   query,
   getDocs,
   orderBy,
+  limit
 } from "firebase/firestore";
 
 // Disable SSL verification for development
