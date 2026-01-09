@@ -7,15 +7,23 @@ const MapView = () => {
   const { alerts, setAlerts, loading } = useAlerts();
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
-  const [layers, setLayers] = useState({
-    showAssets: true,
-    ripCurrentFlow: false,
-  });
-
+  const [mapsReady, setMapsReady] = useState(false);
   const [zoom, setZoom] = useState(16);
 
   useEffect(() => {
+    const checkReady = setInterval(() => {
+      if (window.google?.maps?.importLibrary) {
+        setMapsReady(true);
+        clearInterval(checkReady);
+      }
+    }, 300);
+    return () => clearInterval(checkReady);
+  }, []);
+
+  useEffect(() => {
     const initMap = async () => {
+      if (!mapsReady || !mapRef.current) return;
+
       const { Map } = await google.maps.importLibrary("maps");
       const { Marker } = await google.maps.importLibrary("marker");
 
@@ -29,42 +37,35 @@ const MapView = () => {
         fullscreenControl: true,
       };
 
-      if (mapRef.current) {
-        const newMap = new Map(mapRef.current, mapOptions);
+      const newMap = map || new Map(mapRef.current, mapOptions);
+      if (!map) {
         setMap(newMap);
+      } else {
+        // apply latest zoom to existing map instance
+        newMap.setZoom(zoom);
+      }
 
-        // Asset markers
-        if (layers.showAssets && alerts) {
-          alerts.forEach((alert) => {
-            const lat = Number(alert.location?.Lat);
-            const lng = Number(alert.location?.Long);
-            if (Number.isFinite(lat) && Number.isFinite(lng)) {
-              new Marker({
-                position: { lat, lng },
-                map: newMap,
-                title: alert.title || "Alert",
-                icon: "",
-              });
-            } else {
-              console.warn(
-                "Skipping marker: invalid coords",
-                alert.location,
-                alert
-              );
-            }
-          });
-        }
+      // Asset markers
+      if (alerts) {
+        alerts.forEach((alert) => {
+          const lat = Number(alert.location?.Lat);
+          const lng = Number(alert.location?.Long);
+          if (Number.isFinite(lat) && Number.isFinite(lng)) {
+            new Marker({
+              position: { lat, lng },
+              map: newMap,
+              title: alert.title || "Alert",
+              icon: "",
+            });
+          } else {
+            console.warn("Skipping marker: invalid coords", alert.location, alert);
+          }
+        });
       }
     };
 
-    if (window.google?.maps) {
-      initMap();
-    }
-  }, [layers, zoom]);
-
-  const toggleLayer = (key) => {
-    setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+    initMap();
+  }, [mapsReady, zoom, alerts, map]);
 
   const handleZoom = (direction) => {
     setZoom((prev) => {
@@ -99,29 +100,6 @@ const MapView = () => {
           >
             <span className="material-symbols-outlined text-lg">remove</span>
           </button>
-        </div>
-      </div>
-
-      <div className="absolute top-4 right-4 z-10">
-        <div className="bg-panel-light/90 backdrop-blur-sm border border-border-light rounded-lg p-2 shadow-lg flex flex-col gap-2 min-w-[140px]">
-          <label className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer hover:text-text-dark select-none">
-            <input
-              type="checkbox"
-              checked={layers.showAssets}
-              onChange={() => toggleLayer("showAssets")}
-              className="rounded border-slate-300 bg-white text-primary focus:ring-primary h-3.5 w-3.5"
-            />
-            Show Assets
-          </label>
-          <label className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer hover:text-text-dark select-none">
-            <input
-              type="checkbox"
-              checked={layers.ripCurrentFlow}
-              onChange={() => toggleLayer("ripCurrentFlow")}
-              className="rounded border-slate-300 bg-white text-caution focus:ring-caution h-3.5 w-3.5"
-            />
-            Rip Current Flow
-          </label>
         </div>
       </div>
 
