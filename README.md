@@ -1,3 +1,9 @@
+# CoastGuard AI
+![alt text](assets/image.png)
+
+## Architecture
+![alt text](assets/image1.png)
+
 ## Overview
 Unified beach safety system with four pieces:
 - `restapi/`: FastAPI service that fetches marine data from Open-Meteo and classifies conditions as Safe/Caution/Danger using global thresholds.

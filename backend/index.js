@@ -12,7 +12,6 @@ import {
   getDocs,
   orderBy,
   limit,
-  limit,
 } from "firebase/firestore";
 
 // Disable SSL verification for development
@@ -72,11 +71,7 @@ app.post("/api/reportIncident", async (req, res) => {
     // 2. Send Alert
     const messageData = { imageBase64: frame, type, confidence };
     await alertGroup(messageData);
-    // 2. Send Alert
-    const messageData = { imageBase64: frame, type, confidence };
-    await alertGroup(messageData);
   } catch (err) {
-    console.error("Error while sending:", err);
     console.error("Error while sending:", err);
   }
 });
@@ -128,31 +123,6 @@ async function alertGroup(data) {
     return;
   }
 
-  console.log("Bot token loaded:", botToken.substring(0, 10) + "...");
-
-  try {
-    const photoUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
-    console.log("Sending to:", photoUrl);
-
-    const base64Data = data.imageBase64.replace(/^data:image\/\w+;base64,/, "");
-    const imageBuffer = Buffer.from(base64Data, "base64");
-
-    const FormData = (await import("form-data")).default;
-    const formData = new FormData();
-    formData.append("chat_id", chatId);
-    formData.append("photo", imageBuffer, { filename: "incident.jpg" });
-    formData.append(
-      "caption",
-      `⚠️ <b>${
-        data.type || "Incident"
-      } Detected</b> ⚠️\n🎯 <b>Confidence:</b> ${data.confidence || "N/A"}%`,
-      { contentType: "text/plain" }
-    );
-    formData.append("parse_mode", "HTML");
-
-    await axios.post(photoUrl, formData, {
-      headers: formData.getHeaders(),
-
   try {
     const photoUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
     console.log("Sending to:", photoUrl);
@@ -176,7 +146,6 @@ async function alertGroup(data) {
     await axios.post(photoUrl, formData, {
       headers: formData.getHeaders(),
     });
-
 
     console.log("Alert sent to Telegram successfully");
   } catch (error) {
