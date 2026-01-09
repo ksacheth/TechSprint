@@ -5,7 +5,16 @@ import base64
 
 
 def send_alert(frame, score, video_name):
-    _, buffer = cv2.imencode(".jpg", frame)
+    # Resize frame to reduce size (max width 640px)
+    height, width = frame.shape[:2]
+    if width > 640:
+        scale = 640 / width
+        new_width = 640
+        new_height = int(height * scale)
+        frame = cv2.resize(frame, (new_width, new_height))
+    
+    # Compress JPEG with lower quality
+    _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
     img_b64 = base64.b64encode(buffer).decode()
 
     payload = {
@@ -17,11 +26,12 @@ def send_alert(frame, score, video_name):
     }
 
     try:
-        requests.post(
-            "http://localhost:8080/alerts",
+        response = requests.post(
+            "http://localhost:3001/api/reportIncident",
             json=payload,
-            timeout=1
+            timeout=5
         )
+        response.raise_for_status()
         print("ALERT SENT")
-    except requests.exceptions.RequestException:
-        print("Failed to send alert")
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to send alert: {e}")

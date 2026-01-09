@@ -17,7 +17,9 @@ import {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const app = express();
-app.use(express.json());
+// Allow larger JSON bodies (e.g., base64 frames from detection)
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -50,27 +52,26 @@ app.post("/api/updateRiskLevel", async (req, res) => {
 });
 
 app.post("/api/reportIncident", async (req, res) => {
-  const { coordinates, confidence, imageUrl } = req.body;
+  const { type, timestamp, confidence, video, frame } = req.body;
 
+  // Send response immediately
+  res.status(200).send("Incident received");
+
+  // Save to database asynchronously
   try {
-    // 1. Save to Database
     await addDoc(collection(db, "incidents"), {
-      coordinates,
-      confidence,
-      imageUrl,
+      type,
+      confidence: confidence,
+      frame: frame,
       timestamp: serverTimestamp(),
     });
     console.log("Saved to database");
 
-    // 2. Send Alert
-    const messageData = { coordinates, imageUrl };
-    res.status(200).send("Incident reported");
-    await alertGroup(messageData);
+    // // 2. Send Alert
+    // const messageData = { imageUrl };
+    // await alertGroup(messageData);
   } catch (err) {
     console.error("Critical Error:", err);
-    if (!res.headersSent) {
-      res.status(500).send(err.message);
-    }
   }
 });
 
@@ -87,7 +88,6 @@ app.get("/api/getAlerts", async (req, res) => {
       alerts.push({ id: doc.id, ...doc.data() });
     });
     res.json(alerts);
-
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -106,7 +106,6 @@ app.get("/api/getWeather", async (req, res) => {
     }
     const doc = querySnapshot.docs[0];
     res.json({ id: doc.id, ...doc.data() });
-
   } catch (err) {
     console.error("Error fetching weather:", err.message);
     res.status(500).send(err.message);

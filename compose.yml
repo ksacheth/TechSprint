@@ -52,6 +52,17 @@ services:
       - backend
     restart: unless-stopped
 
+  drowning-detection:
+    build:
+      context: .
+      dockerfile: drowning_v2/Dockerfile
+    container_name: drowning-detection
+    depends_on:
+      - backend
+    restart: unless-stopped
+    volumes:
+      - ./drowning_v2/videos:/app/videos:ro
+
 networks:
   default:
     name: beach-safety-net

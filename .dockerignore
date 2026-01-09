@@ -48,4 +48,11 @@ virtualenv/
 
 # Misc project files
 CLAUDE.md
+
+# Drowning detection
+drowning_v2/videos/*.mp4
+drowning_v2/videos/*.avi
+drowning_v2/videos/*.webm
+drowning_v2/__pycache__/
+drowning_detection/
 README.md
