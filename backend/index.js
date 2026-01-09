@@ -152,12 +152,6 @@ async function alertGroup(data) {
 
     await axios.post(photoUrl, formData, {
       headers: formData.getHeaders(),
-  if (!botToken) {
-    console.error("BOT_TOKEN is not set in environment variables");
-    return;
-  }
-
-  console.log("Bot token loaded:", botToken.substring(0, 10) + "...");
 
   try {
     const photoUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
