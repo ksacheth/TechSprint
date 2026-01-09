@@ -39,15 +39,15 @@ const StatusBar = () => {
           const data = response.data;
 
           setWeather({
-            riskLevel: data.riskLevel || "NA",
+            riskLevel: data.riskLevel || "",
              tideHeight: data.tideData.waveHeight !== undefined && data.tideData.waveHeight !== null
               ? `${data.tideData.waveHeight}ft`
-              : "N/A",
-            tideDirection: data.tideData.direction || "N/A",
+              : "",
+            tideDirection: data.tideData.direction || "",
             windSpeed: data.tideData.currentVelocity !== undefined && data.tideData.currentVelocity !== null
               ? `${data.tideData.currentVelocity}kn`
-              : "N/A",
-            windDirection: data.weatherSummary.windDirection || "N/A",
+              : "",
+            windDirection: data.weatherSummary.windDirection || "",
           });
         }
       } catch (error) {
@@ -86,7 +86,7 @@ const StatusBar = () => {
           <span className="font-mono text-lg font-medium text-text-dark">
             {weather.tideHeight}{" "}
             <span className="text-slate-500 ml-1 text-sm">
-              ({weather.tideDirection})
+              {weather.tideDirection}
             </span>
           </span>
         </div>
