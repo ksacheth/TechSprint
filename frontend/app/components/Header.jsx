@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 
-const Header = ({ activeTab, setActiveTab }) => {
+const Header = () => {
   return (
     <header className="h-16 shrink-0 border-b border-border-light bg-white flex items-center justify-between px-6 z-20 shadow-sm">
       <div className="flex items-center gap-3">

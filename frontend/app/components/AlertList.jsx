@@ -1,16 +1,11 @@
 "use client";
 
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
-import "dotenv/config";
 import useAlerts from "../hooks/useAlerts";
 
 function AlertList() {
   const { alerts, setAlerts, loading } = useAlerts();
-
-  const handleDismiss = (id) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
-  };
 
   const getAlertStyles = (level) => {
     switch (level) {
@@ -86,20 +81,50 @@ function AlertList() {
                 key={alert.id}
                 className={`${styles.bg} ${styles.border} rounded-lg p-4 group transition-colors cursor-pointer relative overflow-hidden shadow-sm ${styles.hover}`}
               >
-                {alert.level === "CRITICAL" && ( <div className={`absolute top-0 left-0 w-1 h-full ${styles.bar}`} ></div>)}
+                {alert.level === "CRITICAL" && (
+                  <div
+                    className={`absolute top-0 left-0 w-1 h-full ${styles.bar}`}
+                  ></div>
+                )}
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-mono font-bold ${styles.timeColor } ${ alert.level === "CRITICAL" ? "bg-danger/10 px-2 py-0.5 rounded" : "" }`}>
+                  <span
+                    className={`text-xs font-mono font-bold ${
+                      styles.timeColor
+                    } ${
+                      alert.level === "CRITICAL"
+                        ? "bg-danger/10 px-2 py-0.5 rounded"
+                        : ""
+                    }`}
+                  >
                     {alert.time}
                   </span>
-                  <span className={`text-xs font-bold px-2 py-1 rounded-sm ${styles.badgeBg} ${styles.badgeText} ${alert.level === "CRITICAL" ? "animate-pulse" : ""}`}>
+                  <span
+                    className={`text-xs font-bold px-2 py-1 rounded-sm ${
+                      styles.badgeBg
+                    } ${styles.badgeText} ${
+                      alert.level === "CRITICAL" ? "animate-pulse" : ""
+                    }`}
+                  >
                     {alert.level}
                   </span>
                 </div>
 
-                <h3 className={`font-bold text-base leading-tight mb-2 ${ alert.level === "RESOLVED" ? "text-slate-600 font-medium" : "text-text-dark"}`}>
+                <h3
+                  className={`font-bold text-base leading-tight mb-2 ${
+                    alert.level === "RESOLVED"
+                      ? "text-slate-600 font-medium"
+                      : "text-text-dark"
+                  }`}
+                >
                   {alert.title}
                 </h3>
-                <p className={`text-sm mb-3 ${ alert.level === "RESOLVED" ? "text-slate-500" : "text-slate-600" }`}>
+                <p
+                  className={`text-sm mb-3 ${
+                    alert.level === "RESOLVED"
+                      ? "text-slate-500"
+                      : "text-slate-600"
+                  }`}
+                >
                   {/* {`Lat: ${alert.location.Lat} Long: ${alert.location.Long}`} */}
                   {`. Confidence: ${alert.confidence}%`}
                 </p>

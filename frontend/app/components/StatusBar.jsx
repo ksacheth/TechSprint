@@ -118,8 +118,7 @@ const StatusBar = () => {
             UV Index
           </span>
           <span className="font-mono text-lg font-medium text-text-dark">
-            {weather.uvIndex}{" "}
-            <span className="text-caution ml-1 text-sm">(High)</span>
+            {weather.uvIndex}
           </span>
         </div>
       </div>

@@ -17,6 +17,7 @@ const MapView = () => {
   useEffect(() => {
     const initMap = async () => {
       const { Map } = await google.maps.importLibrary("maps");
+      const { Marker } = await google.maps.importLibrary("marker");
 
       const mapOptions = {
         zoom: zoom,
@@ -38,7 +39,7 @@ const MapView = () => {
             const lat = Number(alert.location?.Lat);
             const lng = Number(alert.location?.Long);
             if (Number.isFinite(lat) && Number.isFinite(lng)) {
-              new google.maps.Marker({
+              new Marker({
                 position: { lat, lng },
                 map: newMap,
                 title: alert.title || "Alert",

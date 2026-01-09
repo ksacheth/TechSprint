@@ -1,4 +1,5 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,6 +21,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const mapsKey = process.env.NEXT_PUBLIC_MAPS_API;
   return (
     <html lang="en">
       <head>
@@ -27,10 +29,12 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
-        <script
-          async
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAPS_API}`}
-        ></script>
+        {mapsKey ? (
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${mapsKey}&v=weekly&loading=async`}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased bg-background-light text-text-dark font-display h-screen flex flex-col overflow-hidden selection:bg-primary selection:text-white`}

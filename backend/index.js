@@ -95,14 +95,14 @@ app.get("/api/getAlerts", async (req, res) => {
 
 app.get("/api/getWeather", async (req, res) => {
   try {
-    // 1. get the data from database
+    // 1. get the most recent weather entry
     const weatherRef = collection(db, "risk_logs");
-    const q = query(weatherRef, orderBy("timestamp", "desc"));
+    const q = query(weatherRef, orderBy("timestamp", "desc"), limit(1));
     const querySnapshot = await getDocs(q);
 
     // 2. send the data
     if (querySnapshot.empty) {
-      return res.json([]);
+      return res.json(null);
     }
     const doc = querySnapshot.docs[0];
     res.json({ id: doc.id, ...doc.data() });

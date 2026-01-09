@@ -7,7 +7,7 @@ def send_incident_alert(swimmer_id, confidence, box):
     
     payload = {
         "incident_type": "DROWNING_DETECTION",
-        "timestamp": datetime.datetime.now().isoformat(),
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),,
         "swimmer_id": swimmer_id,
         "confidence": round(confidence, 2),
         "location_data": {"box": box},
