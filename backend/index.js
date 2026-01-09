@@ -113,6 +113,7 @@ app.get("/api/getWeather", async (req, res) => {
   }
 });
 
+
 // Function to send Telegram Alert
 async function alertGroup(data) {
   const botToken = process.env.BOT_TOKEN;
