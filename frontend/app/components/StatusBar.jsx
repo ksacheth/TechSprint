@@ -107,9 +107,6 @@ const StatusBar = () => {
           </span>
         </div>
       </div>
-      <div className="flex-1 hidden md:block">
-        <input
-      </div>
       <div className="flex items-center pl-6 py-2 min-w-max">
         <span className="font-mono text-3xl font-bold text-text-dark tracking-widest tabular-nums">
           {time}
