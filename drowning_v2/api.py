@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:3001') + "/api/reportIncident"
+BACKEND_URL = os.getenv('NEXT_PUBLIC_BACKEND_URL', 'http://localhost:3001') + "/api/reportIncident"
 
 def send_alert(frame, score, video_name):
     # Resize frame to reduce size (max width 640px)
