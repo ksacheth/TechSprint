@@ -19,6 +19,17 @@ export const metadata = {
     "Advanced AI-powered coastal surveillance and emergency response system",
 };
 
+/**
+ * Root layout component that renders the application's HTML shell and applies global fonts and layout classes.
+ *
+ * Renders an <html> element with language set to English, includes the Material Symbols stylesheet and the
+ * Google Maps JavaScript API script, and returns a <body> with composed font variables and global utility classes
+ * that wraps the provided children.
+ *
+ * @param {Object} props
+ * @param {import('react').ReactNode} props.children - The content to render inside the layout's body.
+ * @returns {JSX.Element} The HTML structure containing head assets and a body that wraps the children.
+ */
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

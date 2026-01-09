@@ -8,6 +8,11 @@ VIDEO_DIR = "videos"
 
 
 def main():
+    """
+    Process all video files in VIDEO_DIR to detect persons, monitor vertical stillness, and send a single alert per video when prolonged stillness suggests drowning.
+    
+    This function initializes a YOLO object detector and a MediaPipe pose estimator, then iterates over all .mp4, .webm, and .avi files in the videos directory in a continuous loop. For each detected person it tracks the vertical center of the bounding box across frames, increments a stillness counter when movement is small, and flags drowning when the stillness counter exceeds 15 frames. On first drowning detection per video it computes a confidence score from the stillness value (clamped to 1.0) and calls send_alert with the annotated frame, score, and video name. Annotated frames are shown in a window titled "Drowning Detection"; pressing 'q' stops processing and exits the function.
+    """
     model = YOLO("yolov8n.pt")
     pose = mp.solutions.pose.Pose()
     draw = mp.solutions.drawing_utils

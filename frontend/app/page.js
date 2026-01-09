@@ -7,6 +7,13 @@ import AlertList from "./components/AlertList";
 import MapView from "./components/MapView";
 import IncidentView from "./components/IncidentView";
 
+/**
+ * Render the client-side Home dashboard with a header, status bar, and a responsive three-column layout showing Alerts, Map, and Incident Feeds.
+ *
+ * The header is given and can update the internal `activeTab` state (initially "Mission Control"); the main grid places AlertList in the left panel, MapView in the center, and IncidentView in the right panel.
+ *
+ * @returns {JSX.Element} The Home page element.
+ */
 export default function Home() {
   const [activeTab, setActiveTab] = useState("Mission Control");
 

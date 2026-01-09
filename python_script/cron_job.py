@@ -15,6 +15,13 @@ PREDICT_URL = os.getenv('PREDICT_URL')
 UPDATE_URL = os.getenv('UPDATE_URL')
 
 def run_job():
+    """
+    Fetches a safety prediction for NITK Beach and forwards a formatted incident payload to the configured update endpoint.
+    
+    This function requests prediction data for the fixed NITK Beach coordinates from PREDICT_URL, transforms the response into an incident payload containing:
+    - riskLevel, tideData (waveHeight, wavePeriod, currentVelocity), risk_factors, location (latitude, longitude), and weatherSummary (comma-separated risk_factors or "Normal conditions"),
+    then POSTs that payload to UPDATE_URL. It prints status messages for start, received prediction, successful update, and any errors. If the initial prediction request fails, the function returns early without calling the update endpoint.
+    """
     print(f"Starting job for NITK Beach ({NITK_LAT}, {NITK_LONG})...")
 
     # Get the data from predict URL

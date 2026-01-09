@@ -5,6 +5,12 @@ import React, { useEffect, useState } from "react";
 import "dotenv/config";
 import useAlerts from "../hooks/useAlerts";
 
+/**
+ * Render a scrollable list of alerts with per-level styling and a header showing the count of critical alerts.
+ *
+ * Displays a loading message while alerts are loading. When loaded, renders each alert as a card containing time, level badge, title, and confidence. Provides an internal dismiss handler that removes an alert from local state.
+ * @returns {JSX.Element} The rendered AlertList UI.
+ */
 function AlertList() {
   const { alerts, setAlerts, loading } = useAlerts();
 

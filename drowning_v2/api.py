@@ -11,6 +11,16 @@ BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:3001') + "/api/reportIn
 
 def send_alert(frame, score, video_name):
     # Resize frame to reduce size (max width 640px)
+    """
+    Send a drowning incident alert containing a compressed image frame and metadata to the configured backend.
+    
+    The function resizes the provided image to a maximum width of 640 pixels (preserving aspect ratio) and encodes it as a JPEG with quality 50, then base64-encodes the image and POSTs a JSON payload to BACKEND_URL containing: type "DROWNING", a UTC ISO timestamp, the confidence score, the video name, and the encoded frame. On successful HTTP response it prints "ALERT SENT"; on network or HTTP errors it prints a failure message.
+    
+    Parameters:
+        frame (numpy.ndarray): Image frame in BGR or RGB format as an array.
+        score (float): Confidence score for the detected incident.
+        video_name (str): Identifier or name of the source video.
+    """
     height, width = frame.shape[:2]
     if width > 640:
         scale = 640 / width

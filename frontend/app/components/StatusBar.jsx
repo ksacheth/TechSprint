@@ -31,6 +31,11 @@ const StatusBar = () => {
   }, []);
 
   useEffect(() => {
+    /**
+     * Fetches current weather and tide data from the backend and updates the component's weather state.
+     *
+     * Updates the `weather` state with received values and uses `"NA"` or `"N/A"` fallbacks when fields are missing. Any fetch errors are caught and logged to the console.
+     */
     async function getWeather() {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;

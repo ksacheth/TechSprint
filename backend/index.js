@@ -112,7 +112,17 @@ app.get("/api/getWeather", async (req, res) => {
   }
 });
 
-// Function to send Telegram Alert
+/**
+ * Send an incident alert message to a Telegram group.
+ *
+ * The message includes the incident's geographic coordinates and an image URL.
+ *
+ * @param {Object} data - Incident payload.
+ * @param {Object} data.coordinates - Geographic coordinates of the incident.
+ * @param {number} data.coordinates.latitude - Latitude in decimal degrees.
+ * @param {number} data.coordinates.longitude - Longitude in decimal degrees.
+ * @param {string} data.imageUrl - Public URL of an image related to the incident.
+ */
 async function alertGroup(data) {
   const botToken = process.env.BOT_TOKEN;
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;

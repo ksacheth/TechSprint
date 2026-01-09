@@ -5,6 +5,11 @@ from app.api import send_incident_alert
 import os
 
 def main():
+    """
+    Run the drowning-detection demo: process a video stream, visualize tracked swimmers, and emit alerts for detected distress.
+    
+    Continuously reads frames from the configured video source, obtains swimmer tracks from VisionModule, evaluates each track for distress using TrackingModule, and for any track assessed as distressed sends an incident alert and highlights its bounding box in the display. Annotates each bounding box with the swimmer ID, distress score, and distance moved, shows the annotated frames in a window titled "Beach Monitor", and terminates on end-of-stream or when the user presses 'q'. Ensures the video capture is released and OpenCV windows are closed on exit.
+    """
     vision = VisionModule()
     # tracker = TrackingModule(frames_to_watch=50, stillness_threshold=10)
     tracker = TrackingModule(frames_to_watch=50)
